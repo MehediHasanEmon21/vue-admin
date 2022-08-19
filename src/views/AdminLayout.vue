@@ -7,6 +7,7 @@
     <v-main>
       <router-view></router-view>
     </v-main>
+  
   </v-app>
 </template>
 
@@ -20,6 +21,9 @@ export default {
         return {
             drawer: true
         }
+    },
+    created(){
+      this.authUser();
     },
     methods: {
         showSidebar(){
