@@ -1,210 +1,304 @@
 <template>
   <v-container>
     <v-row>
-        <v-col cols="12">
+      <v-col cols="12">
+        <v-data-table
+          :headers="headers"
+          :items="roles"
+          sort-by="calories"
+          class="elevation-1"
+        >
+          <template v-slot:top>
+            <v-toolbar flat>
+              <v-toolbar-title>All Roles</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                @click.stop="addRoleDialog"
+              >
+                Add Role
+              </v-btn>
 
-            <v-data-table
-                :headers="headers"
-                :items="desserts"
-                sort-by="calories"
-                class="elevation-1"
-            >
-                <template v-slot:top>
-                <v-toolbar
-                    flat
+              <!-- create role form -->
+              <v-form ref="rform">
+                <modal
+                  mdalTitle="Add New Role"
+                  :dialog="dialog"
+                  @closeDialog="closeDialog"
                 >
-                    <v-toolbar-title>All Roles</v-toolbar-title>
-                    <v-spacer></v-spacer>
+                  <!-- content -->
+                  <template v-slot:content>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Role name"
+                          type="text"
+                          v-model="form.name"
+                          :rules="nameRules"
+                        ></v-text-field>
+                        <small style="color: red" v-if="errors['name']">
+                          {{ errors["name"][0] }}
+                        </small>
+                      </v-col>
+                    </v-row>
+                  </template>
+                  <!-- content end -->
+
+                  <!-- action btn -->
+                  <template v-slot:acton>
                     <v-btn
-                        color="primary"
-                        dark
-                        class="mb-2"
-                        @click.stop="addRoleDialog"
-                        >
-                        Add Role
+                      color="green white--text darken-1"
+                      success
+                      @click.prevent="addRole"
+                      type="submit"
+                    >
+                      Submit
                     </v-btn>
+                  </template>
+                  <!-- action btn end -->
+                </modal>
+              </v-form>
+              <!-- create role form end -->
 
-                      <!-- create role form -->
-                      <v-form ref="rform">
-                        <modal mdalTitle="Add New Role" :dialog="dialog" @closeDialog="closeDialog">
-                              <!-- content -->
-                              <template v-slot:content>
-                                <v-row>
-                                  <v-col cols="12">
-                                      <v-text-field
-                                          label="Role name"
-                                          type="text"
-                                          v-model="form.name"
-                                          :rules="nameRules"
-                                      ></v-text-field>
-                                  </v-col>
-                                </v-row>
-                              </template>
-                              <!-- content end -->
-
-                              <!-- action btn -->
-                              <template v-slot:acton>
-                                <v-btn
-                                    color="green white--text darken-1"
-                                    success
-                                    @click.prevent="addRole"
-                                    type="submit"
-                                >
-                                    Submit
-                                </v-btn>
-                              </template>
-                              <!-- action btn end -->
-
-                              </modal>
-                      </v-form>
-                      <!-- create role form end -->
-
-                    <v-dialog v-model="dialogDelete" max-width="500px">
-                    <v-card>
-                        <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-                        <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                        <v-spacer></v-spacer>
-                        </v-card-actions>
-                    </v-card>
-                    </v-dialog>
-                </v-toolbar>
-                </template>
-
-                <template v-slot:item.actions="{ item }">
-                <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
+              <!-- edit role form -->
+              <v-form ref="reform">
+                <modal
+                  mdalTitle="Edit Role"
+                  :dialog="editDialouge"
+                  @closeDialog="closeEditDialog"
                 >
-                    mdi-pencil
-                </v-icon>
-                <v-icon
-                    small
-                    @click="deleteItem(item)"
-                >
-                    mdi-delete
-                </v-icon>
+                  <!-- content -->
+                  <template v-slot:content>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Role name"
+                          type="text"
+                          v-model="form.name"
+                          :rules="nameRules"
+                        ></v-text-field>
+                        <small style="color: red" v-if="errors['name']">
+                          {{ errors["name"][0] }}
+                        </small>
+                      </v-col>
+                    </v-row>
+                  </template>
+                  <!-- content end -->
+
+                  <!-- action btn -->
+                  <template v-slot:acton>
+                    <v-btn
+                      color="green white--text darken-1"
+                      success
+                      @click.prevent="updateRole"
+                      type="submit"
+                    >
+                      Update
+                    </v-btn>
+                  </template>
+                  <!-- action btn end -->
+                </modal>
+              </v-form>
+              <!-- edit role form end -->
+
+              <!-- delete role modal -->
+              <delete-modal
+                :dialogDelete="dialogDelete"
+                @closeDeleteDialog="closeDeleteDialog"
+              >
+                <template v-slot:deleteContent>
+                  Are you sure you want to delete this Role?
                 </template>
-
-                <template v-slot:no-data>
-                <v-btn
-                    color="primary"
-                    @click="initialize"
-                >
-                    Reset
-                </v-btn>
+                <template v-slot:deleteAction>
+                  <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                    >OK</v-btn
+                  >
                 </template>
+              </delete-modal>
+              <!-- delete role end -->
+            </v-toolbar>
+          </template>
 
-            </v-data-table>
+          <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-2" @click="editRole(item.id)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small @click="deleteRoleDialog(item.id)">
+              mdi-delete
+            </v-icon>
+          </template>
 
-        </v-col>
+          <template v-slot:no-data>
+            <v-btn color="primary"> Reset </v-btn>
+          </template>
+        </v-data-table>
+      </v-col>
     </v-row>
+      <snackbar :messageProp="snackbar.message" :snackbarProp="snackbar.status" :colorProp="snackbar.color"></snackbar>
   </v-container>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      form: {
-          name: '',
-      },
-      nameRules: [
-          v => !!v || 'Name is required',
-      ],
-      headers: [
-        {
-          text: 'Name',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        { text: 'Actions', value: 'actions', sortable: false },
-      ],
-      roles: [],
-      editedIndex: -1,
-      editedItem: {
-        name: '',
-      },
-      defaultItem: {
-        name: '',
-
-      },
-    }),
-    created () {
-      this.initialize();
+import { mapGetters } from "vuex";
+export default {
+  data: () => ({
+    snackbar: {
+      status: false,
+      message: '',
+      color: ''
     },
-  
-    methods: {
-      initialize () {
-        this.desserts = [
-          {
-            name: 'Super Admin',
-          },
-          {
-            name: 'Admin',
-          },
-          {
-            name: 'Editor',
-          },
+    dialog: false,
+    editDialouge: false,
+    dialogDelete: false,
+    form: {
+      name: "",
+    },
+    nameRules: [(v) => !!v || "Name is required"],
+    headers: [
+      {
+        text: "Name",
+        align: "start",
+        sortable: false,
+        value: "name",
+      },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
+    errors: {},
+    roleId: "",
+  }),
+  created() {
+    this.roleList();
+  },
 
-        ]
-      },
-      addRoleDialog(){
-        this.dialog = true;
-      },
-      addRole(){
-        if(this.$refs.rform.validate()){
-            console.log(this.form);
+  methods: {
+
+    async roleList() {
+      try {
+        let { data } = await this.$axios.get("/role");
+        if (!data.error) {
+          this.$store.dispatch("role/roleList", data.data);
+        } else {
+          console.log("Something Went Wrong");
         }
-      },
-
-      editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDialog(){
-        this.dialog = false;
-      },
-
-      
+      } catch (e) {
+        console.log(e);
+      }
     },
-  }
+
+    async addRole() {
+      if (this.$refs.rform.validate()) {
+        try {
+          let { data } = await this.$axios.post("/role", this.form);
+          if (!data.error) {
+            this.roleList();
+            this.closeDialog();
+            this.clear();
+            this.snacBarSuccess(true,data.message,'green');
+          } else {
+            this.snacBarError(true,data.message,'red');
+          }
+        } catch (err) {
+          this.errors = err.response.data.errors;
+        }
+      }
+    },
+
+    async editRole(id) {
+      this.roleId = id;
+      this.editDialouge = true;
+      try {
+        let { data } = await this.$axios.get(`/role/${this.roleId}`);
+        if (!data.error) {
+          this.form = data.data;
+        } else {
+          console.log("Something Went Wrong");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async updateRole() {
+      if (this.$refs.reform.validate()) {
+        try {
+          let { data } = await this.$axios.put(
+            `/role/${this.form.id}`,
+            this.form
+          );
+          if (!data.error) {
+            this.roleList();
+            this.closeEditDialog();
+            this.editClear();
+            this.snacBarSuccess(true,data.message,'green');
+          } else {
+            this.snacBarError(true,data.message,'red');
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    },
+
+    async deleteItemConfirm() {
+      try {
+        let { data } = await this.$axios.delete(`/role/${this.roleId}`);
+
+        if (!data.error) {
+          this.roleList();
+          this.closeDeleteDialog();
+          this.snacBarSuccess(true,data.message,'green');
+        } else {
+          this.snacBarSuccess(true,data.message,'red');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    clear() {
+      this.form.name = "";
+      this.$refs.reform.reset();
+    },
+
+    editClear() {
+      this.form = {};
+      this.$refs.reform.reset();
+    },
+
+    addRoleDialog() {
+      this.dialog = true;
+    },
+
+    deleteRoleDialog(id) {
+      this.dialogDelete = true;
+      this.roleId = id;
+    },
+
+    closeDeleteDialog() {
+      this.dialogDelete = false;
+    },
+
+    closeDialog() {
+      this.dialog = false;
+      this.errors = {};
+      this.$refs.rform.reset();
+    },
+
+    closeEditDialog() {
+      this.editDialouge = false;
+      this.errors = {};
+      this.$refs.reform.reset();
+    },
+
+  },
+  computed: {
+    ...mapGetters({
+      roles: "role/getRoles",
+    }),
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

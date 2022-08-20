@@ -12,7 +12,7 @@
             text
             x-small
             v-bind="attrs"
-            @click="snackbar = false"
+            @click="snackbarProp = false"
             >
             <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -23,23 +23,23 @@
 <script>
 export default {
     name: 'Snackbar',
-    props: ["snackbar","message","color"],
+    props: ["snackbarProp","messageProp","colorProp"],
     computed: {
         snacbarStatusProp: {
             get(){
-                return this.snackbar;
+                return this.snackbarProp;
             },
             set(){}
         },
         snacbarMessageProp: {
             get(){
-                return this.message;
+                return this.messageProp;
             },
             set(){}
         },
         snacbarColorProp: {
             get(){
-                return this.color;
+                return this.colorProp;
             },
             set(){}
         },

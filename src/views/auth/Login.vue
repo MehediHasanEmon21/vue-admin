@@ -43,7 +43,7 @@
                 </v-container>
             </v-main>
               
-              <snackbar :message="snackbar.message" :snackbar="snackbar.status" :color="snackbar.color"></snackbar>
+              <snackbar :messageProp="snackbar.message" :snackbarProp="snackbar.status" :colorProp="snackbar.color"></snackbar>
         </v-app>
 
       
@@ -56,11 +56,6 @@ export default {
     data(){
         return {
             showPassword: false,
-            snackbar: {
-                status: false,
-                message: '',
-                color: ''
-            },
             form: {
                 email: 'test@gmail.com',
                 password: '12345678'
@@ -81,15 +76,12 @@ export default {
                 try{
                     let { data } = await this.$axios.post('/login',this.form);
                     if(data.error){
-                        this.snackbar.status = true;
-                        this.snackbar.message = data.message;
-                        this.snackbar.color = 'red';
+                        this.snacBarError(true,data.message,'red');
                     }else{
                         localStorage.setItem('token',data.data.token);
+                        this.snacBarSuccess(true,data.message,'green');
                         this.$router.push({path: '/admin/dashboard'});
-                        this.snackbar.status = true;
-                        this.snackbar.message = data.message;
-                        this.snackbar.color = 'green';
+
                     }
                 }catch(e){
                     console.log(e);

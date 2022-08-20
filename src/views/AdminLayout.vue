@@ -7,7 +7,7 @@
     <v-main>
       <router-view></router-view>
     </v-main>
-  
+
   </v-app>
 </template>
 
@@ -19,7 +19,8 @@ export default {
     components: { Header, Sidebar },
     data(){
         return {
-            drawer: true
+            drawer: true,
+            snackbar: true
         }
     },
     created(){
