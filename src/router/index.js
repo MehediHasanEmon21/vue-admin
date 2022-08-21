@@ -4,6 +4,7 @@ import Login from '../views/auth/Login.vue'
 import AdminLayout from '../views/AdminLayout.vue'
 import Dashboard from '../views/dashboard/Dashboard.vue'
 import RoleList from '../views/role/RoleList.vue'
+import AssignRole from '../views/role/AssignRole.vue'
 
 Vue.use(VueRouter)
 
@@ -24,18 +25,23 @@ const routes = [
     name: 'AdminLayout',
     component: AdminLayout,
     redirect: {
-      path: '/admin/dashboard'
+      path: 'admin/dashboard'
     },
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
+        name: '/admin/dashboard',
         component: Dashboard
       },
       {
         path: 'role',
-        name: 'Role',
+        name: '/admin/role',
         component: RoleList
+      },
+      {
+        path: 'assign-role',
+        name: '/admin/assign-role',
+        component: AssignRole
       }
     ]
   },
@@ -58,7 +64,7 @@ router.beforeEach((to, from, next) => {
       isAuthenticated = false;
   }
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  else if (to.name === 'Login' && isAuthenticated) next({ name: 'Dashboard' })
+  else if (to.name === 'Login' && isAuthenticated) next({ name: '/admin/dashboard' })
   else next();
 })
 

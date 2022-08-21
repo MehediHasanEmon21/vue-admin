@@ -62,7 +62,7 @@ export default {
             items: [
                 { text: 'Dashboard', icon: 'mdi-folder', url: '/admin/dashboard' },
                 { text: 'Role', icon: 'mdi-account-multiple', url: '/admin/role' },
-                { text: 'Permission', icon: 'mdi-star', url: '/permission' },
+                { text: 'Assign Role', icon: 'mdi-star', url: '/admin/assign-role' },
             ],
         }
     }
