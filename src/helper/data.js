@@ -23,6 +23,14 @@ let permissionResources = [
       delete: false,
       name: "/admin/assign-role",
     },
+    {
+      resourceName: "User",
+      read: false,
+      write: false,
+      update: false,
+      delete: false,
+      name: "/admin/user",
+    }
   ]
 
   let defaultpermissionResources = [
@@ -50,6 +58,14 @@ let permissionResources = [
       delete: false,
       name: "/admin/assign-role",
     },
+    {
+      resourceName: "User",
+      read: false,
+      write: false,
+      update: false,
+      delete: false,
+      name: "/admin/user",
+    }
   ]
 
   export { permissionResources, defaultpermissionResources }

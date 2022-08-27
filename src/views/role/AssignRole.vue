@@ -55,11 +55,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <snackbar
-      :messageProp="snackbar.message"
-      :snackbarProp="snackbar.status"
-      :colorProp="snackbar.color"
-    ></snackbar>
   </v-container>
 </template>
 
@@ -108,7 +103,7 @@ export default {
           let findIndex = this.roles.findIndex((role) => data.data.id == role.id);
           this.roleList(findIndex);
           this.changeDeaultResourcesStatus();
-          this.snacBarSuccess(true, data.message, "green");
+          this.$root.vtoast.show({message: data.message, color: 'success'});
         } else {
           console.log("Something Went Wrong");
         }

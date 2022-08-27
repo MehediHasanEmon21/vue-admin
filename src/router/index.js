@@ -5,6 +5,7 @@ import AdminLayout from '../views/AdminLayout.vue'
 import Dashboard from '../views/dashboard/Dashboard.vue'
 import RoleList from '../views/role/RoleList.vue'
 import AssignRole from '../views/role/AssignRole.vue'
+import UserList from '../views/user/UserList.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
         path: 'assign-role',
         name: '/admin/assign-role',
         component: AssignRole
+      },
+      {
+        path: 'user',
+        name: '/admin/user',
+        component: UserList
       }
     ]
   },

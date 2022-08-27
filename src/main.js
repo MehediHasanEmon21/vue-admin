@@ -11,7 +11,6 @@ import authMixin from './mixin/auth.js'
 import common from './mixin/common.js'
 
 Vue.mixin(authMixin);
-Vue.mixin(common);
 Vue.component('modal', Modal)
 Vue.component('delete-modal', DeleteModal)
 Vue.component('snackbar', Snackbar)

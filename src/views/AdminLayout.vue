@@ -1,14 +1,13 @@
 <template>
-  <v-app id="inspire">
+  <div>
     
      <Sidebar :drawer="drawer"></Sidebar>
      <Header @showSidebar="showSidebar"></Header>
-
-    <v-main>
+     <v-main>
       <router-view></router-view>
     </v-main>
 
-  </v-app>
+  </div>
 </template>
 
 <script>

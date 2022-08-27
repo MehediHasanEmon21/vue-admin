@@ -4,27 +4,27 @@
       <v-col cols="12">
         <v-data-table
           :headers="headers"
-          :items="roles"
+          :items="users"
           sort-by="calories"
           class="elevation-1"
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>All Roles</v-toolbar-title>
+              <v-toolbar-title>All Users</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn
                 color="primary"
                 dark
                 class="mb-2"
-                @click.stop="addRoleDialog"
+                @click.stop="addUserDialog"
               >
-                Add Role
+                Add User
               </v-btn>
 
-              <!-- create role form -->
-              <v-form ref="rform">
+              <!-- create User form -->
+              <v-form ref="uform">
                 <modal
-                  mdalTitle="Add New Role"
+                  mdalTitle="Add New User"
                   :dialog="dialog"
                   @closeDialog="closeDialog"
                 >
@@ -33,14 +33,49 @@
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
-                          label="Role name"
+                          label="Name"
                           type="text"
                           v-model="form.name"
                           :rules="nameRules"
                         ></v-text-field>
-                        <small style="color: red" v-if="errors['name']">
-                          {{ errors["name"][0] }}
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Email"
+                          type="text"
+                          v-model="form.email"
+                          :rules="emailRules"
+                        ></v-text-field>
+                        <small style="color: red" v-if="errors['email']">
+                          {{ errors["email"][0] }}
                         </small>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Password"
+                          type="password"
+                          v-model="form.password"
+                          :rules="passwordRules"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Confirm Password"
+                          type="password"
+                          v-model="form.confirmPassword"
+                          :rules="confirmPasswordRules.concat(passwordConfirmationRule)"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                            :items="rolesFormat"
+                            label="Role"
+                            v-model="form.role_id"
+                            item-text="text"
+                            item-value="value"
+                            :rules="[v => !!v || 'Role is required']"
+                            dense
+                        ></v-select>
                       </v-col>
                     </v-row>
                   </template>
@@ -51,7 +86,7 @@
                     <v-btn
                       color="green white--text darken-1"
                       success
-                      @click.prevent="addRole"
+                      @click.prevent="addUser"
                       type="submit"
                     >
                       Submit
@@ -60,12 +95,12 @@
                   <!-- action btn end -->
                 </modal>
               </v-form>
-              <!-- create role form end -->
+              <!-- create User form end -->
 
-              <!-- edit role form -->
-              <v-form ref="reform">
+              <!-- edit User form -->
+              <v-form ref="ueform">
                 <modal
-                  mdalTitle="Edit Role"
+                  mdalTitle="Edit User"
                   :dialog="editDialouge"
                   @closeDialog="closeEditDialog"
                 >
@@ -74,14 +109,33 @@
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
-                          label="Role name"
+                          label="Name"
                           type="text"
                           v-model="form.name"
                           :rules="nameRules"
                         ></v-text-field>
-                        <small style="color: red" v-if="errors['name']">
-                          {{ errors["name"][0] }}
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          label="Email"
+                          type="text"
+                          v-model="form.email"
+                          :rules="emailRules"
+                        ></v-text-field>
+                        <small style="color: red" v-if="errors['email']">
+                          {{ errors["email"][0] }}
                         </small>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                            :items="rolesFormat"
+                            label="Role"
+                            v-model="form.role_id"
+                            item-text="text"
+                            item-value="value"
+                            :rules="[v => !!v || 'Role is required']"
+                            dense
+                        ></v-select>
                       </v-col>
                     </v-row>
                   </template>
@@ -92,7 +146,7 @@
                     <v-btn
                       color="green white--text darken-1"
                       success
-                      @click.prevent="updateRole"
+                      @click.prevent="updateUser"
                       type="submit"
                     >
                       Update
@@ -101,15 +155,15 @@
                   <!-- action btn end -->
                 </modal>
               </v-form>
-              <!-- edit role form end -->
+              <!-- edit User form end -->
 
-              <!-- delete role modal -->
+              <!-- delete User modal -->
               <delete-modal
                 :dialogDelete="dialogDelete"
                 @closeDeleteDialog="closeDeleteDialog"
               >
                 <template v-slot:deleteContent>
-                  Are you sure you want to delete this Role?
+                  Are you sure you want to delete this User?
                 </template>
                 <template v-slot:deleteAction>
                   <v-btn color="blue darken-1" text @click="deleteItemConfirm"
@@ -117,15 +171,15 @@
                   >
                 </template>
               </delete-modal>
-              <!-- delete role end -->
+              <!-- delete User end -->
             </v-toolbar>
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editRole(item.id)">
+            <v-icon small class="mr-2" @click="editUser(item.id)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteRoleDialog(item.id)">
+            <v-icon small @click="deleteUserDialog(item.id)">
               mdi-delete
             </v-icon>
           </template>
@@ -135,7 +189,7 @@
                 <template v-slot:default>
                 <tbody>
                     <tr>
-                        <td colspan="2">No Data Found</td>
+                        <td colspan="4">No Data Found</td>
                     </tr>
                 </tbody>
                 </template>
@@ -151,18 +205,23 @@
 import { mapGetters } from "vuex";
 export default {
   data: () => ({
-    snackbar: {
-      status: false,
-      message: '',
-      color: ''
-    },
     dialog: false,
     editDialouge: false,
     dialogDelete: false,
     form: {
       name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role_id: "",
     },
     nameRules: [(v) => !!v || "Name is required"],
+    emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ],
+    passwordRules: [(v) => !!v || "Password is required"],
+    confirmPasswordRules: [(v) => !!v || "Confirm Password is required"],
     headers: [
       {
         text: "Name",
@@ -170,17 +229,42 @@ export default {
         sortable: false,
         value: "name",
       },
+      {
+        text: "Email",
+        align: "start",
+        sortable: false,
+        value: "email",
+      },
+      {
+        text: "Role",
+        align: "start",
+        sortable: false,
+        value: "role.name",
+      },
       { text: "Actions", value: "actions", sortable: false },
     ],
     errors: {},
-    roleId: "",
+    user_id: "",
   }),
   created() {
+    this.userList();
     this.roleList();
   },
 
   methods: {
 
+    async userList() {
+      try {
+        let { data } = await this.$axios.get("/user");
+        if (!data.error) {
+          this.$store.dispatch("user/userList", data.data);
+        } else {
+          console.log("Something Went Wrong");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async roleList() {
       try {
         let { data } = await this.$axios.get("/role");
@@ -194,13 +278,12 @@ export default {
       }
     },
 
-    async addRole() {
-      if (this.$refs.rform.validate()) {
+    async addUser() {
+      if (this.$refs.uform.validate()) {
         try {
-          let { data } = await this.$axios.post("/role", this.form);
-          console.log(data);
+          let { data } = await this.$axios.post("/user", this.form);
           if (!data.error) {
-            this.roleList();
+            this.userList();
             this.closeDialog();
             this.clear();
             this.$root.vtoast.show({message: data.message, color: 'success'});
@@ -213,11 +296,11 @@ export default {
       }
     },
 
-    async editRole(id) {
-      this.roleId = id;
+    async editUser(id) {
+      this.user_id = id;
       this.editDialouge = true;
       try {
-        let { data } = await this.$axios.get(`/role/${this.roleId}`);
+        let { data } = await this.$axios.get(`/user/${this.user_id}`);
         if (!data.error) {
           this.form = data.data;
         } else {
@@ -226,17 +309,18 @@ export default {
       } catch (err) {
         console.log(err);
       }
+      
     },
 
-    async updateRole() {
-      if (this.$refs.reform.validate()) {
+    async updateUser() {
+      if (this.$refs.ueform.validate()) {
         try {
           let { data } = await this.$axios.put(
-            `/role/${this.form.id}`,
+            `/user/${this.form.id}`,
             this.form
           );
           if (!data.error) {
-            this.roleList();
+            this.userList();
             this.closeEditDialog();
             this.editClear();
             this.$root.vtoast.show({message: data.message, color: 'success'});
@@ -251,10 +335,10 @@ export default {
 
     async deleteItemConfirm() {
       try {
-        let { data } = await this.$axios.delete(`/role/${this.roleId}`);
+        let { data } = await this.$axios.delete(`/user/${this.user_id}`);
 
         if (!data.error) {
-          this.roleList();
+          this.userList();
           this.closeDeleteDialog();
           this.$root.vtoast.show({message: data.message, color: 'success'});
         } else {
@@ -267,21 +351,25 @@ export default {
 
     clear() {
       this.form.name = "";
-      this.$refs.reform.reset();
+      this.form.email = "";
+      this.form.password = "";
+      this.form.confirmPassword = "";
+      this.form.role_id = "";
+      this.$refs.uform.reset();
     },
 
     editClear() {
       this.form = {};
-      this.$refs.reform.reset();
+      this.$refs.ueform.reset();
     },
 
-    addRoleDialog() {
+    addUserDialog() {
       this.dialog = true;
     },
 
-    deleteRoleDialog(id) {
+    deleteUserDialog(id) {
       this.dialogDelete = true;
-      this.roleId = id;
+      this.user_id = id;
     },
 
     closeDeleteDialog() {
@@ -291,20 +379,38 @@ export default {
     closeDialog() {
       this.dialog = false;
       this.errors = {};
-      this.$refs.rform.reset();
+      this.$refs.uform.reset();
     },
 
     closeEditDialog() {
       this.editDialouge = false;
       this.errors = {};
-      this.$refs.reform.reset();
+      this.$refs.ueform.reset();
     },
 
   },
   computed: {
     ...mapGetters({
+      users: "user/getUsers",
+    }),
+    ...mapGetters({
       roles: "role/getRoles",
     }),
+    rolesFormat() {
+      const allRoles = [];
+      this.roles.map((role) => {
+        let data = {
+          text: role.name,
+          value: role.id,
+        };
+        allRoles.push(data);
+      });
+      return allRoles;
+    },
+     passwordConfirmationRule() {
+      return () =>
+        this.form.password === this.form.confirmPassword || "Password must match";
+    }
   },
 };
 </script>

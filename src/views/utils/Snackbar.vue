@@ -1,11 +1,12 @@
 <template>
     <v-snackbar
-        v-model="snacbarStatusProp"
+        :color="color"
+        v-model="showSnackbar"
         right
         top
-        :color="snacbarColorProp"
+
         >
-        {{ snacbarMessageProp }}
+        {{ message }}
 
         <template v-slot:action="{ attrs }">
             <v-btn
@@ -14,7 +15,7 @@
             v-bind="attrs"
             @click="snackbarProp = false"
             >
-            <v-icon>mdi-close</v-icon>
+            <!-- <v-icon>mdi-close</v-icon> -->
             </v-btn>
         </template>
     </v-snackbar>
@@ -23,29 +24,25 @@
 <script>
 export default {
     name: 'Snackbar',
-    props: ["snackbarProp","messageProp","colorProp"],
-    computed: {
-        snacbarStatusProp: {
-            get(){
-                return this.snackbarProp;
-            },
-            set(){}
-        },
-        snacbarMessageProp: {
-            get(){
-                return this.messageProp;
-            },
-            set(){}
-        },
-        snacbarColorProp: {
-            get(){
-                return this.colorProp;
-            },
-            set(){}
-        },
-
+    data() {
+        return{
+        showSnackbar: false,
+        message: '',
+        color: 'success',
+        icon: 'mdi-check',
+        timer: 3000
+        }
+    },
+    methods: {
+        show(data) {
+            this.message = data.message || 'missing "message".';
+            this.color = data.color || 'success';
+            this.showSnackbar = true;
+        }
     }
+
 }
+
 </script>
 
 <style>

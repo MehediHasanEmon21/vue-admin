@@ -61,8 +61,9 @@ export default {
             selectedItem: 0,
             items: [
                 { text: 'Dashboard', icon: 'mdi-folder', url: '/admin/dashboard' },
-                { text: 'Role', icon: 'mdi-account-multiple', url: '/admin/role' },
-                { text: 'Assign Role', icon: 'mdi-star', url: '/admin/assign-role' },
+                { text: 'Role', icon: 'mdi-application-brackets', url: '/admin/role' },
+                { text: 'Assign Role', icon: 'mdi-shield-lock', url: '/admin/assign-role' },
+                { text: 'Users', icon: 'mdi-account-multiple', url: '/admin/user' },
             ],
         }
     }
