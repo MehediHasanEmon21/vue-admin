@@ -49,7 +49,7 @@ export default {
         return {
             showPassword: false,
             form: {
-                email: 'test@gmail.com',
+                email: 'emon@gmail.com',
                 password: '12345678'
             },
             passwordRules: [

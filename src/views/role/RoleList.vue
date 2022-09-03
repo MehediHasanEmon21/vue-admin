@@ -17,6 +17,7 @@
                 dark
                 class="mb-2"
                 @click.stop="addRoleDialog"
+                v-if="isWritePermitted"
               >
                 Add Role
               </v-btn>
@@ -122,10 +123,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editRole(item.id)">
+            <v-icon small v-if="isUpdatePermitted" class="mr-2" @click="editRole(item.id)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteRoleDialog(item.id)">
+            <v-icon small v-if="isDeletePermitted" @click="deleteRoleDialog(item.id)">
               mdi-delete
             </v-icon>
           </template>

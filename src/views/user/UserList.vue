@@ -17,6 +17,7 @@
                 dark
                 class="mb-2"
                 @click.stop="addUserDialog"
+                v-if="isWritePermitted"
               >
                 Add User
               </v-btn>
@@ -176,10 +177,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editUser(item.id)">
+            <v-icon v-if="isUpdatePermitted" small class="mr-2" @click="editUser(item.id)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteUserDialog(item.id)">
+            <v-icon small v-if="isDeletePermitted" @click="deleteUserDialog(item.id)">
               mdi-delete
             </v-icon>
           </template>

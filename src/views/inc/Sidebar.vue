@@ -6,16 +6,16 @@
     <v-list>
         <v-list-item>
           <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            <v-img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"></v-img>
           </v-list-item-avatar>
         </v-list-item>
 
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h6">
-              John Leider
+              {{ user.name }}
             </v-list-item-title>
-            <v-list-item-subtitle>{{user.name}}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ user.role?.name }}</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
@@ -31,21 +31,27 @@
         <v-list-item-group
           v-model="selectedItem"
           color="primary"
-        >
-          <v-list-item
+        > 
+          <template v-for="(item, i) in items">
+            <v-list-item
             link
-            v-for="(item, i) in items"
-            :key="i"
             :to="item.url"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
+            v-if="checkAccess(item.url)"
+            :key="i"
+          >  
+            
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title v-text="item.text"></v-list-item-title>
-            </v-list-item-content>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+              </v-list-item-content>
+           
+            
           </v-list-item>
+          </template>
+          
         </v-list-item-group>
       </v-list>
       <!--  -->

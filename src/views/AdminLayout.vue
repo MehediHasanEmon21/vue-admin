@@ -24,11 +24,13 @@ export default {
     },
     created(){
       this.authUser();
+      // this.checkResourcesAccess();
     },
     methods: {
         showSidebar(){
             this.drawer = !this.drawer;
-        }
+        },
+       
     }
    
 }

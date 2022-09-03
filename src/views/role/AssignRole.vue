@@ -44,7 +44,7 @@
                     </tbody>
                   </template>
                 </v-simple-table>
-                <div class="d-flex justify-end mr-5">
+                <div class="d-flex justify-end mr-5" v-if="isWritePermitted">
                   <v-btn @click.prevent="assignRole" color="success">
                     Assign
                   </v-btn>

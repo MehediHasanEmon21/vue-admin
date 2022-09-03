@@ -5,7 +5,7 @@
         <v-col cols="3"></v-col>
         <v-col cols="6">
           <div>
-            <h2 class="not-per">Dashboard</h2>
+            <h2 class="not-per">403 Not Permited</h2>
           </div>
         </v-col>
         <v-col cols="3"></v-col>
@@ -16,18 +16,13 @@
 
 <script>
 export default {
-    name: 'Dashboard',
-    data(){
-      return {
-      }
-    },
-    
-  }
+
+}
 </script>
 
 <style scoped>
   .not-per{
-    background: green;
+    background: red;
     text-align: center;
     padding: 43px;
     color: white;
